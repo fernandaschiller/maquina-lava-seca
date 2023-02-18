@@ -5,15 +5,23 @@ import model.MaquinaLavaSeca;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 public class SecaServiceTest {
-    private MaquinaService maquinaService;
+    @Mock
+    private AlertaService alertaServiceMocked;
+    @InjectMocks
+    private MaquinaServiceImpl maquinaService;
     private LavaService lavaService;
     private SecaService secaService;
     private MaquinaLavaSeca maquinaLavaSeca;
 
     @BeforeEach
-    public void inicializaMaquinaServico () {
+    public void beforeEachTest () {
+        MockitoAnnotations.openMocks(this);
         maquinaService = new MaquinaServiceImpl();
         maquinaLavaSeca = new MaquinaLavaSeca();
         secaService = new SecaServiceImpl();
@@ -49,13 +57,14 @@ public class SecaServiceTest {
     }
 
     @Test
-    public void finalizarSecagemCorretamente() throws Exception {
+    public void finalizarSecagemCorretamenteSemEnviarAlertaSMS() throws Exception {
         // dado:
         maquinaService.ligar(maquinaLavaSeca);
         maquinaService.fecharPorta(maquinaLavaSeca);
         secaService.secar(maquinaLavaSeca, 200, 40);
         // quando:
-        maquinaService.finalizarCiclo(maquinaLavaSeca);
+        Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(maquinaLavaSeca)).thenReturn(false);
+        maquinaService.finalizarCiclo(maquinaLavaSeca, alertaServiceMocked);
         // então:
         Assertions.assertEquals(estadoAtual.FINALIZADA, maquinaLavaSeca.getEstadoAtual());
         Assertions.assertEquals(0, maquinaLavaSeca.getRotacaoAtual());

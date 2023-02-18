@@ -5,32 +5,24 @@ import model.MaquinaLavaSeca;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-//@ExtendWith(MockitoExtension.class)
 public class LavaServiceTest {
-    //@Mock
-    //private AlertaService alertaServiceMocked;
-    //@InjectMocks
-    private MaquinaService maquinaService;
-    //@InjectMocks
+    @Mock
+    private AlertaService alertaServiceMocked;
+    @InjectMocks
+    private MaquinaServiceImpl maquinaService;
     private LavaService lavaService;
     private MaquinaLavaSeca maquinaLavaSeca;
 
     @BeforeEach
-    public void inicializaMaquinaServico () {
-//        MockitoAnnotations.openMocks(this);
+    public void beforeEachTest () {
+        MockitoAnnotations.openMocks(this);
         maquinaService = new MaquinaServiceImpl();
         maquinaLavaSeca = new MaquinaLavaSeca();
-    }
-
-    @BeforeEach
-    public void inicializaLavaServico () {
         lavaService = new LavaServiceImpl();
     }
 
@@ -72,12 +64,14 @@ public class LavaServiceTest {
     }
 
     @Test
-    public void deveDesligarAposFinalizarOCiclo() throws Exception {
+    public void deveDesligarAposFinalizarOCicloEEmitirSMS() throws Exception {
         // dado
         maquinaService.fecharPorta(maquinaLavaSeca);
         maquinaService.ligar(maquinaLavaSeca);
         lavaService.lavar(maquinaLavaSeca, 50, 30);
-        maquinaService.finalizarCiclo(maquinaLavaSeca);
+
+        Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(maquinaLavaSeca)).thenReturn(true);
+        maquinaService.finalizarCiclo(maquinaLavaSeca, alertaServiceMocked);
         // quando
         maquinaService.desligar(maquinaLavaSeca);
         // então
@@ -85,22 +79,6 @@ public class LavaServiceTest {
         Assertions.assertEquals(0, maquinaLavaSeca.getRotacaoAtual());
         Assertions.assertEquals(0, maquinaLavaSeca.getTemperaturaAtual());
     }
-
-//    @Test
-//    public void deveEmitirAlertaViaSMSQuandoFinalizarCicloCorretamente() throws Exception {
-//        // dado
-//        maquinaService.fecharPorta(maquinaLavaSeca);
-//        maquinaService.ligar(maquinaLavaSeca);
-//        lavaService.lavar(maquinaLavaSeca, 50, 30);
-//        // quando
-//        //Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(maquinaLavaSeca)).thenReturn(true);
-//        Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(Mockito.any(MaquinaLavaSeca.class))).thenReturn(true);
-//        maquinaService.finalizarCiclo(maquinaLavaSeca);
-//        // então
-//        Assertions.assertEquals(estadoAtual.FINALIZADA, maquinaLavaSeca.getEstadoAtual());
-//        Assertions.assertEquals(0, maquinaLavaSeca.getRotacaoAtual());
-//        Assertions.assertEquals(0, maquinaLavaSeca.getTemperaturaAtual());
-//    }
 
     // testes negativos:
 

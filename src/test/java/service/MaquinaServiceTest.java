@@ -5,20 +5,24 @@ import model.MaquinaLavaSeca;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 public class MaquinaServiceTest {
-    private MaquinaService maquinaService;
+    @Mock
+    private AlertaService alertaServiceMocked;
+    @InjectMocks
+    private MaquinaServiceImpl maquinaService;
     private LavaService lavaService;
     private MaquinaLavaSeca maquinaLavaSeca;
 
     @BeforeEach
-    public void inicializaMaquinaServico () {
+    public void beforeEachTest () {
+        MockitoAnnotations.openMocks(this);
         maquinaService = new MaquinaServiceImpl();
         maquinaLavaSeca = new MaquinaLavaSeca();
-    }
-
-    @BeforeEach
-    public void inicializaLavaServico () {
         lavaService = new LavaServiceImpl();
     }
 
@@ -50,7 +54,7 @@ public class MaquinaServiceTest {
     }
 
     @Test
-    public void quandoDesligadaTempERotacaoDeveSerZero () throws Exception {
+    public void quandoDesligadaTempERotacaoDeveSerZero () {
         // dado:
         // quando:
         // então:
@@ -140,7 +144,7 @@ public class MaquinaServiceTest {
         Assertions.assertThrows(Exception.class, () -> maquinaService.fecharPorta(maquinaLavaSeca));
     }
     @Test
-    public void portaNaoPodeSerAbertaQuandoJaAberta () throws Exception {
+    public void portaNaoPodeSerAbertaQuandoJaAberta () {
         // dado:
         // quando:
         // então:
@@ -161,7 +165,8 @@ public class MaquinaServiceTest {
         // dado:
         // quando:
         // então:
-        Assertions.assertThrows(Exception.class, () -> maquinaService.finalizarCiclo(maquinaLavaSeca));
+        Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(maquinaLavaSeca)).thenReturn(false);
+        Assertions.assertThrows(Exception.class, () -> maquinaService.finalizarCiclo(maquinaLavaSeca, alertaServiceMocked));
     }
 
     @Test
@@ -183,7 +188,7 @@ public class MaquinaServiceTest {
     }
 
     @Test
-    public void naoDeveCentrifugarComMaquinaDesligada () throws Exception {
+    public void naoDeveCentrifugarComMaquinaDesligada () {
         // dado:
         // quando:
         // então:
@@ -191,7 +196,7 @@ public class MaquinaServiceTest {
     }
 
     @Test
-    public void naoDeveLavarComMaquinaDesligada () throws Exception {
+    public void naoDeveLavarComMaquinaDesligada () {
         // dado:
         // quando:
         // então:

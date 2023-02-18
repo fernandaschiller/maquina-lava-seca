@@ -5,8 +5,6 @@ import enums.estadoAtual;
 
 public class MaquinaServiceImpl implements MaquinaService{
 
-    //private AlertaService alertaService;
-
     public void ligar(MaquinaLavaSeca maquinaLavaSeca) throws Exception {
         if (maquinaLavaSeca.getEstadoAtual().equals(estadoAtual.DESLIGADA)){
             maquinaLavaSeca.setLigada(true);
@@ -47,16 +45,16 @@ public class MaquinaServiceImpl implements MaquinaService{
         }
     }
 
-    public void finalizarCiclo(MaquinaLavaSeca maquinaLavaSeca) throws Exception {
+    public void finalizarCiclo(MaquinaLavaSeca maquinaLavaSeca, AlertaService alertaService) throws Exception {
         if (maquinaLavaSeca.isLigada() && maquinaLavaSeca.isPortaFechada() && ((maquinaLavaSeca.getEstadoAtual().equals(estadoAtual.LAVANDO)) || (maquinaLavaSeca.getEstadoAtual().equals(estadoAtual.CENTRIFUGANDO)) || (maquinaLavaSeca.getEstadoAtual().equals(estadoAtual.SECANDO)))) {
             maquinaLavaSeca.setTemperaturaAtual(0);
             maquinaLavaSeca.setRotacaoAtual(0);
             maquinaLavaSeca.setEstadoAtual(estadoAtual.FINALIZADA);
-            //if(alertaService.emitirAlertaViaSMS(maquinaLavaSeca)) {
-            //    System.out.println("Alerta via SMS emitido com sucesso!!!");
-            //} else {
-            //    throw new Exception("Alerta via SMS não emitido...");
-            //}
+            if(alertaService.emitirAlertaViaSMS(maquinaLavaSeca)) {
+                System.out.println("Alerta via SMS emitido com sucesso!!! -> Mocked");
+            } else {
+                System.out.println("Alerta via SMS não emitido... -> Mocked");
+            }
         } else {
             throw new Exception("Estado atual da máquina: " + maquinaLavaSeca.getEstadoAtual().toString());
         }

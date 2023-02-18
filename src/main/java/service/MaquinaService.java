@@ -7,7 +7,6 @@ public interface MaquinaService {
     void desligar(MaquinaLavaSeca maquinaLavaSeca) throws Exception;
     void abrirPorta(MaquinaLavaSeca maquinaLavaSeca) throws Exception;
     void fecharPorta(MaquinaLavaSeca maquinaLavaSeca) throws Exception;
-    //String estadoAtual(MaquinaLavaSeca maquinaLavaSeca);
-    void finalizarCiclo(MaquinaLavaSeca maquinaLavaSeca) throws Exception;
+    void finalizarCiclo(MaquinaLavaSeca maquinaLavaSeca, AlertaService alertaService) throws Exception;
 }
 
