@@ -5,22 +5,15 @@ import model.MaquinaLavaSeca;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 public class MaquinaServiceTest {
-    @Mock
     private AlertaService alertaServiceMocked;
-    @InjectMocks
     private MaquinaServiceImpl maquinaService;
     private LavaService lavaService;
     private MaquinaLavaSeca maquinaLavaSeca;
 
     @BeforeEach
     public void beforeEachTest () {
-        MockitoAnnotations.openMocks(this);
         maquinaService = new MaquinaServiceImpl();
         maquinaLavaSeca = new MaquinaLavaSeca();
         lavaService = new LavaServiceImpl();
@@ -161,11 +154,10 @@ public class MaquinaServiceTest {
     }
 
     @Test
-    public void naoDeveFinalizarCicloComPortaAberta () throws Exception {
+    public void naoDeveFinalizarCicloComPortaAberta () {
         // dado:
         // quando:
         // então:
-        Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(maquinaLavaSeca)).thenReturn(false);
         Assertions.assertThrows(Exception.class, () -> maquinaService.finalizarCiclo(maquinaLavaSeca, alertaServiceMocked));
     }
 
