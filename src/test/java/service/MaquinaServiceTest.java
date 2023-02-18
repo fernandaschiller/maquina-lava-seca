@@ -4,6 +4,7 @@ import enums.estadoAtual;
 import model.MaquinaLavaSeca;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class MaquinaServiceTest {
@@ -20,6 +21,7 @@ public class MaquinaServiceTest {
     }
 
     @Test
+    @DisplayName("Verifica que a máquina está desligada.")
     public void verificaEstadoAtualDesligada () {
         // dado:
         // quando:
