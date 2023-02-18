@@ -1,0 +1,9 @@
+#Ignorar pasta relatório JaCoCoRelatórioRelatório
+htmlReport/
+
+#IgnorarRemover configurações Idea
+.idea/
+.DS_Store
+
+#Ignorar pasta target
+target/
