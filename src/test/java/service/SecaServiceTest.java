@@ -66,6 +66,8 @@ public class SecaServiceTest {
         Mockito.when(alertaServiceMocked.emitirAlertaViaSMS(maquinaLavaSeca)).thenReturn(false);
         maquinaService.finalizarCiclo(maquinaLavaSeca, alertaServiceMocked);
         // então:
+        Mockito.verify(alertaServiceMocked, Mockito.times(1)).emitirAlertaViaSMS(maquinaLavaSeca);
+        Mockito.verify(alertaServiceMocked, Mockito.atLeastOnce()).emitirAlertaViaSMS(maquinaLavaSeca);
         Assertions.assertEquals(estadoAtual.FINALIZADA, maquinaLavaSeca.getEstadoAtual());
         Assertions.assertEquals(0, maquinaLavaSeca.getRotacaoAtual());
         Assertions.assertEquals(0, maquinaLavaSeca.getTemperaturaAtual());

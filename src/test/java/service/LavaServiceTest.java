@@ -75,6 +75,8 @@ public class LavaServiceTest {
         // quando
         maquinaService.desligar(maquinaLavaSeca);
         // então
+        Mockito.verify(alertaServiceMocked, Mockito.times(1)).emitirAlertaViaSMS(maquinaLavaSeca);
+        Mockito.verify(alertaServiceMocked, Mockito.atLeastOnce()).emitirAlertaViaSMS(maquinaLavaSeca);
         Assertions.assertEquals(estadoAtual.DESLIGADA, maquinaLavaSeca.getEstadoAtual());
         Assertions.assertEquals(0, maquinaLavaSeca.getRotacaoAtual());
         Assertions.assertEquals(0, maquinaLavaSeca.getTemperaturaAtual());
